@@ -98,35 +98,35 @@ public class MainApp {
       System.out.println("Тестирую Util.Select");
 
       testService(select.from().users().search(15), "Поиск до 15 пользователей");
-      testService(select.from().users().whereUserAndCar().userParamAnd("Юлия",null,null)
-                      .carParam(null, 2024).search(),
+      testService(select.from().users().where().uParamAnd("Юлия",null,null)
+                      .cParam(null, 2024).search(),
               "Поиск пользователей c именем Юлия и серией машины 2024");
       testService(select.from().cars().search(10), "Поиск до 10 машин");
-      testService(select.from().cars().whereUser().userParam("Михаил", "", "").search(),
+      testService(select.from().cars().where().uParam("Михаил", "", "").search(),
               "Поиск машин чьих владельцев зовут Михаил");
-      testService(select.from().users().whereUserAndCar().userUserAnd(new User().setFirstName("Михаил")).carCar(new Car()).search(),
+      testService(select.from().users().where().uUserAnd(new User().setFirstName("Михаил")).cCar(new Car()).search(),
               "Поиск всех пользователей с именем Михаил, у которых есть машина");
-      testService(select.from().users().whereUserAndCar().userUserAnd(new User().setFirstName("Михаил")).carCar(null).search(),
+      testService(select.from().users().where().uUserAnd(new User().setFirstName("Михаил")).cCar(null).search(),
               "Поиск всех пользователей с именем Михаил, у которых нет машины");
-      testService(select.from().users().whereUserAndCar().userParamAnd("","","mail.ru").carCar(null).search(),
+      testService(select.from().users().where().uParamAnd("","","mail.ru").cCar(null).search(),
               "Поиск пользователей без машины c доменом почты mail.ru");
-      testService(select.from().users().whereUser().userId(14L).search(),
+      testService(select.from().users().where().uId(14L).search(),
               "Поиск пользователя с id 14");
-      testService(select.from().users().whereCar().carParam("АвтоВАЗ", null).search(),
+      testService(select.from().users().where().cParam("АвтоВАЗ", null).search(),
               "Поиск пользователей с машиной АвтоВАЗ");
-      testService(select.from().cars().whereCar().carParam("Mercedes-Benz",null).search() ,
+      testService(select.from().cars().where().cParam("Mercedes-Benz",null).search() ,
               "Поиск машин по модели Mercedes-Benz");
-      testService(select.from().users().whereCar().carCar(new Car()).search(),
+      testService(select.from().users().where().cCar(new Car()).search(),
               "Поиск всех пользователей, у которых есть машина");
       select.setDefaultMaxResult(10);
       System.out.println("Теперь по умолчанию ищем до 10 результатов");
-      testService(select.from().users().whereCar().carParam(null, 2024).search(),
+      testService(select.from().users().where().cParam(null, 2024).search(),
               "Поиск пользователей c машиной серии 2024");
-      testService(select.from().users().whereUser().userParam("Иван", "", "").search(),
+      testService(select.from().users().where().uParam("Иван", "", "").search(),
               "Поиск пользователей c именем Иван");
-      testService(select.from().users().whereCar().carCar(null).search(),
+      testService(select.from().users().where().cCar(null).search(),
               "Поиск пользователей без машины");
-      testService(select.from().users().whereUser().userParam("","","example.com").search(),
+      testService(select.from().users().where().uParam("","","example.com").search(),
               "Поиск пользователей c доменом почты example.com");
 
 

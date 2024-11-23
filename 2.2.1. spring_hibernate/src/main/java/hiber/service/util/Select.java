@@ -26,8 +26,7 @@ public class Select {
         return this;
     }
 
-    public abstract class SearchBuilder<T> implements Search<T>, CarSearchParameters<T>, UserSearchParameters<T>,
-            UserAndCarSearchParameters<T>, UserAndOrCarSearchParameters<T> {
+    public abstract class SearchBuilder<T> implements SearchOrWhere<T>, UserAndOrCarSearchParameters<T> {
 
         private User searchUserParams;
         private Car searchCarParams;
@@ -37,7 +36,7 @@ public class Select {
         protected Car getSearchCarParams() { return searchCarParams; }
         protected User getSearchUserParams() { return searchUserParams; }
 
-        protected UserAndOrCarSearchParameters<T> clearParams() {
+        protected SearchOrWhere<T> clearParams() {
             searchUserParams = new User();
             searchCarParams = new Car();
             maxResults = defaultMaxResult;
@@ -45,17 +44,17 @@ public class Select {
         }
 
         @Override
-        public Search<T> carParam(String model, Integer series) {
+        public Search<T> cParam(String model, Integer series) {
             searchCarParams.setModel(model).setSeries(series == null ? 0 : series);
             return this;
         }
         @Override
-        public Search<T> carId(Long carId) {
+        public Search<T> cId(Long carId) {
             searchCarParams.setId(carId == null ? 0 : carId);
             return this;
         }
         @Override
-        public Search<T> carCar(Car car) {
+        public Search<T> cCar(Car car) {
             searchCarParams = car;
             if (searchUserParams != null) {
                 searchUserParams.setCar(car);
@@ -64,47 +63,39 @@ public class Select {
         }
 
         @Override
-        public Search<T> userUser(User user) {
+        public Search<T> uUser(User user) {
             searchUserParams = user;
             return this;
         }
         @Override
-        public Search<T> userId(Long userId) {
+        public Search<T> uId(Long userId) {
             searchUserParams.setId(userId == null ? 0 : userId);
             return this;
         }
         @Override
-        public Search<T> userParam(String firstName, String lastName, String email) {
+        public Search<T> uParam(String firstName, String lastName, String email) {
             searchUserParams.setFirstName(firstName).setLastName(lastName).setEmail(email);
             return this;
         }
 
         @Override
-        public CarSearchParameters<T> userParamAnd(String firstName, String lastName, String email) {
-            userParam(firstName, lastName, email);
+        public CarSearchParameters<T> uParamAnd(String firstName, String lastName, String email) {
+            uParam(firstName, lastName, email);
             return this;
         }
         @Override
-        public CarSearchParameters<T> userIdAnd(Long userId) {
-            userId(userId);
+        public CarSearchParameters<T> udAnd(Long userId) {
+            uId(userId);
             return this;
         }
         @Override
-        public CarSearchParameters<T> userUserAnd(User user) {
-            userUser(user);
+        public CarSearchParameters<T> uUserAnd(User user) {
+            uUser(user);
             return this;
         }
 
         @Override
-        public UserAndCarSearchParameters<T> whereUserAndCar() {
-            return this;
-        }
-        @Override
-        public CarSearchParameters<T> whereCar() {
-            return this;
-        }
-        @Override
-        public UserSearchParameters<T> whereUser() {
+        public UserAndOrCarSearchParameters<T> where() {
             return this;
         }
 
@@ -134,43 +125,41 @@ public class Select {
         List<T> search(int maxResults);
     }
 
-    public interface UserAndOrCarSearchParameters<T> extends Search<T> {
-        UserSearchParameters<T> whereUser();
-        CarSearchParameters<T> whereCar();
-        UserAndCarSearchParameters<T> whereUserAndCar();
+    public interface SearchOrWhere<T> extends Search<T> {
+        UserAndOrCarSearchParameters<T> where();
     }
 
-    public interface UserAndCarSearchParameters<T> {
-        CarSearchParameters<T> userUserAnd(User user);
-        CarSearchParameters<T> userIdAnd(Long userId);
-        CarSearchParameters<T> userParamAnd(String firstName, String lastName, String email);
+    public interface UserAndOrCarSearchParameters<T> extends UserSearchParameters<T>, CarSearchParameters<T> {
+        CarSearchParameters<T> uUserAnd(User user);
+        CarSearchParameters<T> udAnd(Long userId);
+        CarSearchParameters<T> uParamAnd(String firstName, String lastName, String email);
     }
 
     public interface UserSearchParameters<T> {
-        Search<T> userUser(User user);
-        Search<T> userId(Long userId);
-        Search<T> userParam(String firstName, String lastName, String email);
+        Search<T> uUser(User user);
+        Search<T> uId(Long userId);
+        Search<T> uParam(String firstName, String lastName, String email);
     }
 
     public interface CarSearchParameters<T> {
-        Search<T> carCar(Car car);
-        Search<T> carId(Long carId);
-        Search<T> carParam(String model, Integer series);
+        Search<T> cCar(Car car);
+        Search<T> cId(Long carId);
+        Search<T> cParam(String model, Integer series);
     }
 
     public interface SearchFactory {
-        UserAndOrCarSearchParameters<User> users();
-        UserAndOrCarSearchParameters<Car> cars();
+        SearchOrWhere<User> users();
+        SearchOrWhere<Car> cars();
     }
 
     private class UsersAndCarsDataBase implements SearchFactory {
         @Override
-        public UserAndOrCarSearchParameters<User> users() {
+        public SearchOrWhere<User> users() {
             return userSearchBuilder.clearParams();
         }
 
         @Override
-        public UserAndOrCarSearchParameters<Car> cars() {
+        public SearchOrWhere<Car> cars() {
             return carSearchBuilder.clearParams();
         }
     }
