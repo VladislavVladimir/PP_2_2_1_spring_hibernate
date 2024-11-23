@@ -26,7 +26,7 @@ public class Select {
         return this;
     }
 
-    public abstract class SearchBuilder<T> implements SearchOrWhere<T>, UserAndOrCarSearchParameters<T> {
+    private abstract class SearchBuilder<T> implements SearchOrWhere<T>, UserAndOrCarSearchParameters<T> {
 
         private User searchUserParams;
         private Car searchCarParams;
@@ -84,7 +84,7 @@ public class Select {
             return this;
         }
         @Override
-        public CarSearchParameters<T> udAnd(Long userId) {
+        public CarSearchParameters<T> uIdAnd(Long userId) {
             uId(userId);
             return this;
         }
@@ -131,7 +131,7 @@ public class Select {
 
     public interface UserAndOrCarSearchParameters<T> extends UserSearchParameters<T>, CarSearchParameters<T> {
         CarSearchParameters<T> uUserAnd(User user);
-        CarSearchParameters<T> udAnd(Long userId);
+        CarSearchParameters<T> uIdAnd(Long userId);
         CarSearchParameters<T> uParamAnd(String firstName, String lastName, String email);
     }
 

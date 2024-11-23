@@ -114,6 +114,8 @@ public class MainApp {
               "Поиск пользователя с id 14");
       testService(select.from().users().where().cParam("АвтоВАЗ", null).search(),
               "Поиск пользователей с машиной АвтоВАЗ");
+      testService(select.from().users().where().uUserAnd(new User().setEmail("Support")).cCar(null).search(),
+              "Поиск пользователей с подстрокой Support в почте, у которых нет машины");
       testService(select.from().cars().where().cParam("Mercedes-Benz",null).search() ,
               "Поиск машин по модели Mercedes-Benz");
       testService(select.from().users().where().cCar(new Car()).search(),
@@ -128,7 +130,6 @@ public class MainApp {
               "Поиск пользователей без машины");
       testService(select.from().users().where().uParam("","","example.com").search(),
               "Поиск пользователей c доменом почты example.com");
-
 
    }
 
