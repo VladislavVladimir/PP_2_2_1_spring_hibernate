@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -24,6 +25,12 @@ public class UserServiceImp implements UserService {
    @Override
    public List<User> listUsers() {
       return userDao.listUsers();
+   }
+
+   @Transactional(readOnly = true)
+   @Override
+   public Optional<User> findFirstUserByCar(String model, int series) {
+      return userDao.findFirstUserByCar(model, series);
    }
 
 }

@@ -19,12 +19,19 @@ public class User {
    @Column(name = "email")
    private String email;
 
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name = "car_id")
+   private Car car;
+
    public User() {}
-   
+
    public User(String firstName, String lastName, String email) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.email = email;
+      this.setFirstName(firstName).setLastName(lastName).setEmail(email);
+   }
+
+   public User(String firstName, String lastName, String email, Car car) {
+      this.setCar(car).setFirstName(firstName).setLastName(lastName).setEmail(email);
+
    }
 
    public Long getId() {
@@ -35,27 +42,51 @@ public class User {
       this.id = id;
    }
 
-   public String getFirstName() {
-      return firstName;
-   }
+   public String getFirstName() { return firstName; }
 
-   public void setFirstName(String firstName) {
+   public User setFirstName(String firstName) {
       this.firstName = firstName;
+      return this;
    }
 
    public String getLastName() {
       return lastName;
    }
 
-   public void setLastName(String lastName) {
+   public User setLastName(String lastName) {
       this.lastName = lastName;
+      return this;
    }
 
    public String getEmail() {
       return email;
    }
 
-   public void setEmail(String email) {
+   public User setEmail(String email) {
       this.email = email;
+      return this;
+   }
+
+   public Car getCar() {
+      return car;
+   }
+
+   public User setCar(Car car) {
+      this.car = car;
+      if (car != null && car.getUser() != this) {
+         car.setUser(this);
+      }
+      return this;
+   }
+
+   @Override
+   public String toString() {
+      return "User{" +
+              "id=" + id +
+              ", firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              ", car=" + car +
+              '}';
    }
 }
